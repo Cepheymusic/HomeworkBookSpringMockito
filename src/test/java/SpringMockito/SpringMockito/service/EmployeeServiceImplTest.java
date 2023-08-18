@@ -21,31 +21,24 @@ class EmployeeServiceImplTest {
     Employee employee2 = new Employee("Ivand", "Ivanok", 555, 2);
     Employee employee3 = new Employee("Ivanf", "Ivanop", 555, 2);
     Employee employee4 = new Employee("Ivang", "Ivanos", 555, 3);
+    Employee employee5 = new Employee("Ivan", "Ivanor", 555, 1);
+    List<Employee> employees = List.of(employee, employee1,employee2, employee3);
     @Test
     void addEmployee_employeeMaxCount_EmployeeStorageIsFullException() {
-        underTest.addEmployee(
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getSalary(),
-                employee.getDepartment());
-        underTest.addEmployee(
-                employee1.getFirstName(),
-                employee1.getLastName(),
-                employee1.getSalary(),
-                employee1.getDepartment());
-        underTest.addEmployee(
-                employee2.getFirstName(),
-                employee2.getLastName(),
-                employee2.getSalary(),
-                employee2.getDepartment());
-        underTest.addEmployee(
-                employee3.getFirstName(),
-                employee3.getLastName(),
-                employee3.getSalary(),
-                employee3.getDepartment());
+        for(Employee employee : employees) {
+            underTest.addEmployee(
+                    employee.getFirstName(),
+                    employee.getLastName(),
+                    employee.getSalary(),
+                    employee.getDepartment());
+        }
         EmployeeStorageIsFullException ex =
                 assertThrows(EmployeeStorageIsFullException.class,
-                        () -> underTest.addEmployee("Ivanan", "Ivanora", 555, 1));
+                        () -> underTest.addEmployee(
+                                employee4.getFirstName(),
+                                employee4.getLastName(),
+                                employee4.getSalary(),
+                                employee4.getDepartment()));
         assertEquals("Превышен лимит сотрудников", ex.getMessage());
     }
     @Test
@@ -57,18 +50,19 @@ class EmployeeServiceImplTest {
                 employee.getDepartment());
         EmployeeAlreadyAddedException ex =
                 assertThrows(EmployeeAlreadyAddedException.class,
-                        () -> underTest.addEmployee("Ivan", "Ivanor", 555, 1));
+                        () -> underTest.addEmployee(
+                                employee5.getFirstName(),
+                                employee5.getLastName(),
+                                employee5.getSalary(),
+                                employee5.getDepartment()));
         assertEquals("Сотрудник есть", ex.getMessage());
     }
     @Test
     void addEmployee_employeeAddInMap_addAndReturnEmployee() {
         Employee result = underTest.addEmployee("Ivan", "Ivanor", 123, 1);
         assertEquals(employee, result);
+        assertTrue(underTest.findAll().contains(employee));
     }
-    //думал что сравнивать нужно с тем что добавил в метод addEmployee("Ivan", "Ivanor", 123, 1)- то есть это.
-    //И думал что будет так assertEquals(employee, result);
-    // Но, мы получается сравниваем с сотрудником, который уже как бы есть.
-    // ps Метод Работает)))Верно ли?
     @Test
     void removeEmployee_employeeNotIsMap_ThrowNotFoundException() {
         EmployeeNotFoundException ex =
@@ -111,5 +105,17 @@ class EmployeeServiceImplTest {
                 employee.getLastName());
         assertEquals(employee, result);
     }
-
+    @Test
+    void findAll_allEmployeeInMap_returnAllEmployee() {
+        for(Employee employee : employees) {
+            underTest.addEmployee(
+                    employee.getFirstName(),
+                    employee.getLastName(),
+                    employee.getSalary(),
+                    employee.getDepartment());
+        }
+        assertTrue(underTest.findAll().containsAll(employees));
+    }
+    //Логика этого теста такая. Добавляю сотрудников в карту нашу, далее проверяю, что сотрудники как бы есть в мапе.
+    //    Не уверен, но нужно же с чего то начинать)). Что проверить тут ещё, не знаю.
 }

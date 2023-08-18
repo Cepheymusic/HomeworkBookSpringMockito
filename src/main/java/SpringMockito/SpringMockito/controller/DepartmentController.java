@@ -40,6 +40,6 @@ public class DepartmentController {
 
     @GetMapping(path = "/employees")
     public Map<Integer, List<Employee>> getAllEmployee() {
-        return departmentService.getEmployeeByDepartment();
+        return departmentService.getEmployeeByDepartments();
     }
 }
