@@ -11,7 +11,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -65,7 +67,7 @@ class DepartmentServiceImplTest {
     void findMinSalaryEmployee_employeeFind_employeeWithMinSalary() {
         when(employeeService.findAll()).thenReturn(employees);
         Employee result = underTest.findMinSalaryByDepartment(2);
-        assertEquals(employee3, result);
+        assertEquals(employee2, result);
     }
 
     @Test
@@ -79,7 +81,14 @@ class DepartmentServiceImplTest {
     @Test
     void getAllEmployeeByDepartment_allEmployeeIsFind_returnAllEmployeeByDepartment() {
         when(employeeService.findAll()).thenReturn(employees);
-        Collection<Employee> result = underTest.getEmployeeByDepartments(2);
-
+        Collection<Employee> result = underTest.getAllEmployeeByDepartment(2);
+        assertEquals(List.of(employee1, employee2, employee3), result);
+    }
+    @Test
+    void getAllEmployeeByDepartments_allEmployeeIsFind_returnAllEmployeeByDepartments() {
+        when(employeeService.findAll()).thenReturn(employees);
+        Map <Integer, List<Employee>> result = underTest.getEmployeeByDepartments();
+        assertEquals(Map.of(1, List.of(employee, employee5),2, List.of(employee1, employee2, employee3), 3,
+                List.of(employee4)), result);
     }
 }

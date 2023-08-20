@@ -59,7 +59,11 @@ class EmployeeServiceImplTest {
     }
     @Test
     void addEmployee_employeeAddInMap_addAndReturnEmployee() {
-        Employee result = underTest.addEmployee("Ivan", "Ivanor", 123, 1);
+        Employee result = underTest.addEmployee(
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getSalary(),
+                employee.getDepartment());
         assertEquals(employee, result);
         assertTrue(underTest.findAll().contains(employee));
     }
@@ -67,7 +71,9 @@ class EmployeeServiceImplTest {
     void removeEmployee_employeeNotIsMap_ThrowNotFoundException() {
         EmployeeNotFoundException ex =
                 assertThrows(EmployeeNotFoundException.class,
-                        () -> underTest.removeEmployee("Ivan", "Ivanor"));
+                        () -> underTest.removeEmployee(
+                                employee.getFirstName(),
+                                employee.getLastName()));
         assertEquals("Сотрудник не найден", ex.getMessage());
     }
     @Test
@@ -90,7 +96,9 @@ class EmployeeServiceImplTest {
                 employee.getDepartment());
         EmployeeNotFoundException ex =
                 assertThrows(EmployeeNotFoundException.class,
-                        () -> underTest.findEmployee("Ivan", "Boobnov"));
+                        () -> underTest.findEmployee(
+                                employee2.getFirstName(),
+                                employee2.getLastName()));
         assertEquals("Сотрудник не найден", ex.getMessage());
     }
     @Test
@@ -116,6 +124,4 @@ class EmployeeServiceImplTest {
         }
         assertTrue(underTest.findAll().containsAll(employees));
     }
-    //Логика этого теста такая. Добавляю сотрудников в карту нашу, далее проверяю, что сотрудники как бы есть в мапе.
-    //    Не уверен, но нужно же с чего то начинать)). Что проверить тут ещё, не знаю.
 }
